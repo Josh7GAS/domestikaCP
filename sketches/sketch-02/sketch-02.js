@@ -24,7 +24,6 @@ const sketch = () => {
         context.fillRect(0, 0, width, height); //The fillRect() method
         //draws a "filled" rectangle. The default color of the fill is black.
 
-
         context.fillStyle = stickColor;
 
         const cx = width * 0.5;
