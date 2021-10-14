@@ -1,5 +1,6 @@
 const canvasSketch = require('canvas-sketch');
 const random = require('canvas-sketch-util/random');
+const math = require('canvas-sketch-util/math');
 
 const settings = {
     dimensions: [1080, 1080],
@@ -12,7 +13,7 @@ const animate = () => {
 };
 //animate();
 
-let pointColor = 'black';
+let pointColor = 'silver';
 
 const sketch = ({ context, width, height }) => {
 
@@ -34,16 +35,18 @@ const sketch = ({ context, width, height }) => {
         for (let count = 0; count < agents.length; count++) {
             const agent = agents[count];
 
-            for (let countA = count + 1; countA < array.length; countA++) {
+            for (let countA = count + 1; countA < agents.length; countA++) {
                 const other = agents[countA];
 
                 const dist = agent.pos.getDistance(other.pos);
 
                 if (dist > 200) continue;
 
+                context.lineWidth = math.mapRange(dist, 0, 200, 12, 1);
+
                 context.beginPath();
                 context.moveTo(agent.pos.x, agent.pos.y);
-                context.lineTo(other.pos.y, other.pos.y);
+                context.lineTo(other.pos.x, other.pos.y);
                 context.stroke();
             }
         }
@@ -89,7 +92,7 @@ class Agent {
         this.pos.y += this.velocity.y;
     }
     draw(context) {
-        // context.fillStyle = pointColor;
+        context.fillStyle = pointColor;
         context.save();
         context.translate(this.pos.x, this.pos.y);
 
