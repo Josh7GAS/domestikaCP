@@ -3,7 +3,8 @@ const math = require('canvas-sketch-util/math');
 const random = require('canvas-sketch-util/random');
 
 const settings = {
-    dimensions: [1080, 1080]
+    dimensions: [1080, 1080],
+    animate: true
 };
 
 const degToRad = (degrees) => {
@@ -46,7 +47,7 @@ const sketch = () => {
             context.save();
             context.translate(cx - 100, cy);
             context.rotate(-angle);
-
+            
             context.lineWidth = random.range(5, 20);
 
             context.beginPath();
