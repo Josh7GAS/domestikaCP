@@ -51,8 +51,7 @@ const sketch = () => {
       //const noise = random.noise2D(x + frame * 10, y, 0.001);
       const noise = random.noise3D(x, y, frames * 10, params.freq);
       const angle = noise * Math.PI * params.amp;
-      //const scale = (noise + 1)/2 * 30;
-      //const scale = (noise * 0.5 + 0.5) * 30;
+     
       const scale = math.mapRange(
         noise,
         -1,
