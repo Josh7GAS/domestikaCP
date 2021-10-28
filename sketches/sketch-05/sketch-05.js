@@ -7,25 +7,11 @@ const settings = {
 
 let manager;
 
-let text = "7";
+let text = "A";
 let fontSize = 1200;
 let fontFamily = "Lucida Console";
 
-const url = "https://picsum.photos/200";
-const loadMeSomeImage = (url) => {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = () => reject(img);
-    img.src = url;
-  });
-};
-
-const getImage = async () => {
-  const img = await loadMeSomeImage(url);
-  return img;
-};
-
+const url = "https://picsum.photos/id/237/200/300";
 const typeCanvas = document.createElement("canvas");
 const typeContext = typeCanvas.getContext("2d");
 
@@ -39,7 +25,7 @@ const sketch = ({ context, width, height }) => {
   typeCanvas.height = rows;
 
   return ({ context, width, height }) => {
-    typeContext.fillStyle = "black";
+    typeContext.fillStyle = "white";
     typeContext.fillRect(0, 0, cols, rows);
 
     fontSize = cols * 1.2;
@@ -64,11 +50,14 @@ const sketch = ({ context, width, height }) => {
     typeContext.beginPath();
     typeContext.rect(mx, my, mw, mh);
     typeContext.stroke();
-    typeContext.drawImage(getImage(), 10, 10);
-    //typeContext.fillText(text, 0, 0);
+    typeContext.fillText(text, 0, 0);
     typeContext.restore();
+    // getImage()
+    //   .then((img) => typeContext.drawImage(img, img.width, img.height))
+    //   .catch((err) => console.log("Image Not Loaded -> " + err.message));
+    
 
-    const typeData = typeContext.getImageData(0, 0, cols, rows).data;
+    //const typeData = typeContext.getImageData(0, 0, cols, rows).data;
 
     context.fillStyle = "black";
     context.fillRect(0, 0, width, height);
@@ -106,6 +95,21 @@ const sketch = ({ context, width, height }) => {
       context.restore();
     }
   };
+};
+
+const loadMeSomeImage = (url) => {
+  return new Promise((resolve, reject) => {
+    let img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(img);
+    img.src = url;
+  });
+};
+
+const getImage = async () => {
+  const img = await loadMeSomeImage(url);
+  console.log("fetching image => " + img);
+  return img;
 };
 
 const getGlyph = (v) => {
