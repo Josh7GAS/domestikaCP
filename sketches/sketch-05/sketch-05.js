@@ -2,12 +2,12 @@ const canvasSketch = require("canvas-sketch");
 const random = require("canvas-sketch-util/random");
 
 const settings = {
-  dimensions: [1080, 1080],
+  dimensions: [1080, 1080]
 };
 
 let manager;
 
-let text = "A";
+let text = ",.";
 let fontSize = 1200;
 let fontFamily = "Lucida Console";
 
@@ -25,7 +25,7 @@ const sketch = ({ context, width, height }) => {
   typeCanvas.height = rows;
 
   return ({ context, width, height }) => {
-    typeContext.fillStyle = "white";
+    typeContext.fillStyle = "black";
     typeContext.fillRect(0, 0, cols, rows);
 
     fontSize = cols * 1.2;
@@ -52,12 +52,13 @@ const sketch = ({ context, width, height }) => {
     typeContext.stroke();
     typeContext.fillText(text, 0, 0);
     typeContext.restore();
-    // getImage()
-    //   .then((img) => typeContext.drawImage(img, img.width, img.height))
-    //   .catch((err) => console.log("Image Not Loaded -> " + err.message));
-    
 
-    //const typeData = typeContext.getImageData(0, 0, cols, rows).data;
+    /*getImage()
+      .then((img) => typeContext.drawImage(img, img.width, img.height))
+      .catch((err) => console.log("Image Not Loaded -> " + err.message));
+    */
+
+    const typeData = typeContext.getImageData(0, 0, cols, rows).data;
 
     context.fillStyle = "black";
     context.fillRect(0, 0, width, height);
@@ -86,10 +87,10 @@ const sketch = ({ context, width, height }) => {
 
       context.fillStyle = "white";
 
-      context.save();
+     context.save();
       context.translate(x, y);
       context.translate(cell * 0.5, cell * 0.5);
-
+      // context.fillRect(0,0,cell,cell);
       context.fillText(glyph, 0, 0);
 
       context.restore();
@@ -112,20 +113,20 @@ const getImage = async () => {
   return img;
 };
 
-const getGlyph = (v) => {
-  if (v < 50) return "";
-  if (v < 100) return ".";
-  if (v < 150) return "-";
-  if (v < 200) return "+";
+const getGlyph = (value) => {
+  if (value < 50) return "";
+  if (value < 100) return ".";
+  if (value < 150) return "-";
+  if (value < 200) return "+";
 
-  const glyphs = "_=/ -+".split("");
+  const glyphs = "_*#>".split("");
 
   return random.pick(glyphs);
 };
 
 const onKeyUp = (e) => {
-  text = e.key.toUpperCase();
-  console.log("Botão apertado");
+  if(e.key) text = text.toUpperCase();
+  console.log("Botão apertado => " + e);
   manager.render();
 };
 
@@ -136,9 +137,9 @@ const start = async () => {
 };
 start();
 
-// canvasSketch(sketch, settings);
+/*canvasSketch(sketch, settings);
 
-/*const url = "https://picsum.photos/200";
+const url = "https://picsum.photos/200";
 
 const loadMeSomeImage = (url) => {
   return new Promise((resolve, reject) => {
