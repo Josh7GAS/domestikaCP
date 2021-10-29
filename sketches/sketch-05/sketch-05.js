@@ -1,13 +1,22 @@
 const canvasSketch = require("canvas-sketch");
 const random = require("canvas-sketch-util/random");
+const Tweakpane = require("tweakpane");
 
 const settings = {
-  dimensions: [1080, 1080]
+  dimensions: [1080, 1080],
+  animate: true
+};
+
+const params = {
+  text: "a",
+  theme_color: "black",
+  color: "white",
+  animate: false
 };
 
 let manager;
 
-let text = ",.";
+let text = params.text;
 let fontSize = 1200;
 let fontFamily = "Lucida Console";
 
@@ -15,7 +24,7 @@ const url = "https://picsum.photos/id/237/200/300";
 const typeCanvas = document.createElement("canvas");
 const typeContext = typeCanvas.getContext("2d");
 
-const sketch = ({ context, width, height }) => {
+const sketch = ({ width, height }) => {
   const cell = 20;
   const cols = Math.floor(width / cell);
   const rows = Math.floor(height / cell);
@@ -24,13 +33,14 @@ const sketch = ({ context, width, height }) => {
   typeCanvas.width = cols;
   typeCanvas.height = rows;
 
-  return ({ context, width, height }) => {
-    typeContext.fillStyle = "black";
+  return ({ context, width, height}) => {
+    
+    typeContext.fillStyle = params.theme_color
     typeContext.fillRect(0, 0, cols, rows);
 
     fontSize = cols * 1.2;
 
-    typeContext.fillStyle = "white";
+    typeContext.fillStyle = params.color;
     typeContext.font = `${fontSize}px ${fontFamily}`;
     typeContext.textBaseline = "top";
 
@@ -43,6 +53,7 @@ const sketch = ({ context, width, height }) => {
 
     const tx = (cols - mw) * 0.5 - mx;
     const ty = (rows - mh) * 0.5 - my;
+    
 
     typeContext.save();
     typeContext.translate(tx, ty);
@@ -60,7 +71,7 @@ const sketch = ({ context, width, height }) => {
 
     const typeData = typeContext.getImageData(0, 0, cols, rows).data;
 
-    context.fillStyle = "black";
+    context.fillStyle = params.theme_color;
     context.fillRect(0, 0, width, height);
 
     context.texBaseline = "middle";
@@ -85,12 +96,12 @@ const sketch = ({ context, width, height }) => {
       context.font = `${cell * 2}px ${fontFamily}`;
       if (Math.random() < 0.1) context.font = `${cell * 6}px ${fontFamily}`;
 
-      context.fillStyle = "white";
+      context.fillStyle = params.color;
 
-     context.save();
+      context.save();
       context.translate(x, y);
       context.translate(cell * 0.5, cell * 0.5);
-      // context.fillRect(0,0,cell,cell);
+      //context.fillRect(0,0,cell,cell);
       context.fillText(glyph, 0, 0);
 
       context.restore();
@@ -125,16 +136,29 @@ const getGlyph = (value) => {
 };
 
 const onKeyUp = (e) => {
-  if(e.key) text = text.toUpperCase();
+  if (e.key) text = text.toUpperCase();
   console.log("Botão apertado => " + e);
   manager.render();
 };
 
-document.addEventListener("keyup", onKeyUp);
+//document.addEventListener("keyup", onKeyUp);
 
 const start = async () => {
   manager = await canvasSketch(sketch, settings);
+
 };
+
+const createPane = () => {
+  const pane = new Tweakpane.Pane();
+  let folder;
+
+  folder = pane.addFolder({ title: "Grid" });
+  folder.addInput(params, "text");
+  folder.addInput(params, "theme_color", {min: [0, 0, 0], max: [255, 255, 255], });
+  folder.addInput(params, "color", { min: [0, 0, 0], max: [255, 255, 255] });
+  folder.addInput(params, "animate");
+};
+createPane();
 start();
 
 /*canvasSketch(sketch, settings);
